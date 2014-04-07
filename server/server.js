@@ -60,6 +60,8 @@ Passport.use(new PayPalStrategy({
 	profileURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/userinfo"
 },
 function (accessToken, refreshToken, profile, done) {
+	console.log('is it going to be here at any point?');
+	console.log(profile, accessToken);
 	return done(null, profile);
 }
 ));
