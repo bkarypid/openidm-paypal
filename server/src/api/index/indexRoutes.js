@@ -42,5 +42,16 @@ var registerRoute = {
 	}
 };
 
+var summaryRoute = {
+	method: 'GET',
+	path: '/summary.html',
+	config: {
+		auth: false,
+		handler: {
+			file: '../client/dist/summary.html'
+		}
+	}
+};
 
-module.exports = [indexRoute, loginRoute, registerRoute, cssRoute];
+
+module.exports = [indexRoute, loginRoute, registerRoute, summaryRoute, cssRoute];

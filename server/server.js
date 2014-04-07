@@ -48,8 +48,8 @@ Passport.deserializeUser(function (obj, done) {
 });
 
 //initializing the paypal openid-connect strategy. TODO: validation function misses the find or create user functionality
-var PAYPAL_APP_ID = "AcSjoRDN5xk8g9vLVPbGxrvRWejfD2rVTgkvgg67aCLax882mOH4rQlNV4db",
-PAYPAL_APP_SECRET = "ENkxixCVBLuGs3aroZzrNDNCoMKThaP0jwJpp8rV-D0_NDxy4PNmK5LRM1Jj";
+var PAYPAL_APP_ID = "ARDYdxAiS4uppeKM0xe8m793Z9LCe089FWkrQ9iM09fi2oUMUuF5cXdDDHnS",
+PAYPAL_APP_SECRET = "ELe8-BD2GZv1c6zyMqteHNk6rCS4vXkQJp3J6oWfaSL9Q2yS4pL8KteinwmD";
 
 Passport.use(new PayPalStrategy({
 	clientID: PAYPAL_APP_ID,
