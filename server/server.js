@@ -54,7 +54,7 @@ PAYPAL_APP_SECRET = "ENkxixCVBLuGs3aroZzrNDNCoMKThaP0jwJpp8rV-D0_NDxy4PNmK5LRM1J
 Passport.use(new PayPalStrategy({
 	clientID: PAYPAL_APP_ID,
 	clientSecret: PAYPAL_APP_SECRET,
-	callbackURL: "https://sa.xgov.capgeminidigital.co.uk/auth/paypal",
+	callbackURL: "https://sa.xgov.capgeminidigital.co.uk/auth/paypal/callback",
 	authorizationURL: "https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize",
 	tokenURL: "https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/tokenservice",
 	profileURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/userinfo"
