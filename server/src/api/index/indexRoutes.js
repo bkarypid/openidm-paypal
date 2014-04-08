@@ -3,55 +3,54 @@
 var indexRoute = {
 	method: 'GET',
 	path: '/{path*}',
-	config: {auth: 'passport'},
 	handler: {
 		directory: { path: '../client/dist/', listing: false, index: true }
 	}
 };
 
-var loginRoute = {
-	method: 'GET',
-	path: '/login',
-	config: {
-		auth: false,
-		handler: {
-			file: '../client/dist/sahome.html'
-		}
-	}
-};
+// var loginRoute = {
+// 	method: 'GET',
+// 	path: '/login',
+// 	config: {
+// 		auth: false,
+// 		handler: {
+// 			file: '../client/dist/sahome.html'
+// 		}
+// 	}
+// };
 
-var cssRoute = {
-	method: 'GET',
-	path: '/app.css',
-	config: {
-		auth: false,
-		handler: {
-			file: '../client/dist/app.css'
-		}
-	}
-};
+// var cssRoute = {
+// 	method: 'GET',
+// 	path: '/app.css',
+// 	config: {
+// 		auth: false,
+// 		handler: {
+// 			file: '../client/dist/app.css'
+// 		}
+// 	}
+// };
 
-var registerRoute = {
-	method: 'GET',
-	path: '/register.html',
-	config: {
-		auth: false,
-		handler: {
-			file: '../client/dist/register.html'
-		}
-	}
-};
+// var registerRoute = {
+// 	method: 'GET',
+// 	path: '/register.html',
+// 	config: {
+// 		auth: false,
+// 		handler: {
+// 			file: '../client/dist/register.html'
+// 		}
+// 	}
+// };
 
-var summaryRoute = {
-	method: 'GET',
-	path: '/summary.html',
-	config: {
-		auth: false,
-		handler: {
-			file: '../client/dist/summary.html'
-		}
-	}
-};
+// var summaryRoute = {
+// 	method: 'GET',
+// 	path: '/summary.html',
+// 	config: {
+// 		auth: false,
+// 		handler: {
+// 			file: '../client/dist/summary.html'
+// 		}
+// 	}
+// };
 
 
-module.exports = [indexRoute, loginRoute, registerRoute, summaryRoute, cssRoute];
+module.exports = [indexRoute];
