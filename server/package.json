@@ -9,15 +9,19 @@
     "pathPrefix": "../"
   },
   "dependencies": {
-		"hapi": "~2.6.0",
-		"catbox": "latest",
-		"joi": "latest",
-		"lodash": "latest",
-		"request": "latest",
-		"q": "latest",
-		"redis": "latest",
-		"winston": "latest"
-},
+    "hapi": "~2.6.0",
+    "catbox": "latest",
+    "joi": "latest",
+    "lodash": "latest",
+    "request": "latest",
+    "q": "latest",
+    "redis": "latest",
+    "winston": "latest",
+    "yar": "~1.1.0",
+    "travelogue": "~1.1.0",
+    "passport": "~0.2.0",
+    "passport-paypal-openidconnect": "~0.1.1"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0",
