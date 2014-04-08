@@ -41,32 +41,32 @@ var Passport = server.plugins.travelogue.passport;
 
 //serializing and deserializing a user, which is a required process by passport
 Passport.serializeUser(function (user, done) {
-	done(null, user);
+	done(null, user.id);
 });
 Passport.deserializeUser(function (obj, done) {
 	done(null, obj);
 });
 
-//initializing the paypal openid-connect strategy. TODO: validation function misses the find or create user functionality
+//initializing the paypal openid-connect strategy for the passport plug-in. TODO: validation function misses the find or create user functionality
 var PAYPAL_APP_ID = "ARDYdxAiS4uppeKM0xe8m793Z9LCe089FWkrQ9iM09fi2oUMUuF5cXdDDHnS",
 PAYPAL_APP_SECRET = "ELe8-BD2GZv1c6zyMqteHNk6rCS4vXkQJp3J6oWfaSL9Q2yS4pL8KteinwmD";
 
 Passport.use(new PayPalStrategy({
 	clientID: PAYPAL_APP_ID,
 	clientSecret: PAYPAL_APP_SECRET,
-	callbackURL: "http://1.1.96.223.xip.io:50500/auth/paypal/callback",
+	callbackURL: "http://1.1.96.78.xip.io:50500/auth/paypal/callback",
 	authorizationURL: "https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize",
-	tokenURL: "https://www.paypal.com/webapps/auth/protocol/openidconnect/v1/tokenservice",
-	profileURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/userinfo"
+	tokenURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/tokenservice",
+	userInfoURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/userinfo"
 },
-function (accessToken, refreshToken, profile, done) {
-	console.log('is it going to be here at any point?');
-	console.log(profile, accessToken);
+function (accessToken, refreshToken, profile, done) { //TODO: user discovery/creation in openIDM
+	// console.log('profileID ---> ' + profile.id);
+	console.log(JSON.stringify(profile, null, 2));
 	return done(null, profile);
 }
 ));
 
-
+//routes used by the strategy
 
 var authRoute = {
 	method: 'GET',
@@ -76,7 +76,7 @@ var authRoute = {
 		handler: function (request, reply) {
 			console.log('its here');
 			// reply().redirect('/login');
-			Passport.authenticate('paypal')(request, reply);
+			Passport.authenticate('paypal', {scope: 'profile'})(request, reply);
 		}
 	}
 };
@@ -89,9 +89,15 @@ var callbackRoute = {
 		handler: function (request, reply) {
 			console.log('its here now');
 			Passport.authenticate('paypal', {
-				failureRedirect: '/sahome.html'
+				failureRedirect: '/sahome.html',
+				successRedirect: '/register.html',
+				failureFlash: true
 			})(request, reply, function (err) {
-				reply().redirect('/summary.html');
+				if (err && err.isBoom) {
+					console.log(err);
+				}
+				console.log('will it go here?');
+				return reply().redirect('/');
 			});
 		}
 	}

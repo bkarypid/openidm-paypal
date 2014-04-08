@@ -8,16 +8,16 @@ var indexRoute = {
 	}
 };
 
-// var loginRoute = {
-// 	method: 'GET',
-// 	path: '/login',
-// 	config: {
-// 		auth: false,
-// 		handler: {
-// 			file: '../client/dist/sahome.html'
-// 		}
-// 	}
-// };
+var loginRoute = {
+	method: 'GET',
+	path: '/login',
+	config: {
+		auth: false,
+		handler: {
+			file: '../client/dist/register.html'
+		}
+	}
+};
 
 // var cssRoute = {
 // 	method: 'GET',
@@ -41,16 +41,14 @@ var indexRoute = {
 // 	}
 // };
 
-// var summaryRoute = {
-// 	method: 'GET',
-// 	path: '/summary.html',
-// 	config: {
-// 		auth: false,
-// 		handler: {
-// 			file: '../client/dist/summary.html'
-// 		}
-// 	}
-// };
+var summaryRoute = {
+	method: 'GET',
+	path: '/summary.html',
+	config: {auth: 'passport'},
+	handler: {
+		file: '../client/dist/summary.html'
+	}
+};
 
 
-module.exports = [indexRoute];
+module.exports = [indexRoute, summaryRoute, loginRoute];
