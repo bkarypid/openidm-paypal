@@ -13,7 +13,7 @@
     "catbox": "latest",
     "joi": "latest",
     "lodash": "latest",
-    "request": "latest",
+    "request": "~2.34.0",
     "q": "latest",
     "redis": "latest",
     "winston": "latest",

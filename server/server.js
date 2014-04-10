@@ -4,6 +4,8 @@ var Hapi = require('hapi'),
 util = require('util'),
 PayPalStrategy = require('passport-paypal-openidconnect').Strategy,
 config = require('./config'),
+User = require('./src/api/util/user'),
+configParams = require('./src/api/util/configParams'),
 indexRoutes = require('./src/api/index/indexRoutes');
 
 
@@ -20,7 +22,7 @@ var options = {
 var plugins = {
 	yar: {
 		cookieOptions: {
-			password: 'worldofwalmart', // cookie secret
+			password: 'posafFIRM365', // cookie secret
 			isSecure: false // required for non-https applications
 		}
 	},
@@ -34,37 +36,42 @@ server.pack.require(plugins, function (err) {
 		throw err;
 	}
 });
+
 server.auth.strategy('passport', 'passport');
 
 //by this, we are able to use passport with hapi normally
 var Passport = server.plugins.travelogue.passport;
 
-//serializing and deserializing a user, which is a required process by passport
+//serializing and deserializing a user, in order to map user to session.
 Passport.serializeUser(function (user, done) {
-	done(null, user.id);
+	done(null, user._id);
 });
 Passport.deserializeUser(function (obj, done) {
 	done(null, obj);
 });
 
 //initializing the paypal openid-connect strategy for the passport plug-in. TODO: validation function misses the find or create user functionality
-var PAYPAL_APP_ID = "ARDYdxAiS4uppeKM0xe8m793Z9LCe089FWkrQ9iM09fi2oUMUuF5cXdDDHnS",
-PAYPAL_APP_SECRET = "ELe8-BD2GZv1c6zyMqteHNk6rCS4vXkQJp3J6oWfaSL9Q2yS4pL8KteinwmD";
 
-Passport.use(new PayPalStrategy({
-	clientID: PAYPAL_APP_ID,
-	clientSecret: PAYPAL_APP_SECRET,
-	callbackURL: "http://1.1.96.78.xip.io:50500/auth/paypal/callback",
-	authorizationURL: "https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize",
-	tokenURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/tokenservice",
-	userInfoURL: "https://api.sandbox.paypal.com/v1/identity/openidconnect/userinfo"
-},
-function (accessToken, refreshToken, profile, done) { //TODO: user discovery/creation in openIDM
-	// console.log('profileID ---> ' + profile.id);
-	console.log(JSON.stringify(profile, null, 2));
-	return done(null, profile);
-}
-));
+Passport.use(new PayPalStrategy(configParams.paypalStrategyOptions, function (accessToken, refreshToken, profile, done) {
+	var user = new User(configParams.repoOptions, profile);
+	user.search()
+	.then(function (searchResult) {
+		if (searchResult !== '404') {
+			console.log(searchResult);
+			return done(null, searchResult);
+		}
+		else {
+			user.create()
+			.then(function (newProfile) {
+				console.log(newProfile);
+				return done(null, newProfile);
+			});
+		}
+	})
+	.fail(function (err) {
+		console.log('error during validation: ' + err);
+	});
+}));
 
 //routes used by the strategy
 
@@ -74,9 +81,7 @@ var authRoute = {
 	config: {
 		auth: false,
 		handler: function (request, reply) {
-			console.log('its here');
-			// reply().redirect('/login');
-			Passport.authenticate('paypal', {scope: 'profile'})(request, reply);
+			Passport.authenticate('paypal', {scope: 'profile email phone address'})(request, reply);
 		}
 	}
 };
@@ -87,16 +92,15 @@ var callbackRoute = {
 	config: {
 		auth: false,
 		handler: function (request, reply) {
-			console.log('its here now');
 			Passport.authenticate('paypal', {
-				failureRedirect: '/sahome.html',
-				successRedirect: '/register.html',
+				failureRedirect: '/register.html',
+				successRedirect: '/form.html',
 				failureFlash: true
 			})(request, reply, function (err) {
 				if (err && err.isBoom) {
-					console.log(err);
+					return reply(err);
 				}
-				console.log('will it go here?');
+				//if user serialization is not done properly, authentication will not take place at all and the flow goes here.
 				return reply().redirect('/');
 			});
 		}
@@ -110,15 +114,6 @@ var authenticationRoutes = [authRoute, callbackRoute];
 //defining our server routes
 server.route(indexRoutes);
 server.route(authenticationRoutes);
-
-// Hook to provide index.html for any request
-// server.ext('onPreResponse', function (request, reply) {
-// 	var response = request.response;
-// 	if (!response.isBoom || response.output.statusCode !== 404) {
-// 		return reply();
-// 	}
-// 	reply.file('../client/dist/index.html');
-// });
 
 server.start();
 console.log('Hapi server running in port ' + config.port);
