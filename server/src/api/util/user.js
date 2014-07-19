@@ -22,7 +22,7 @@ function User(options, profile) {
 		throw new Error(typeErr);
 	}
 
-//if type of repository is not specify, we set it to openidm by default (since it is the only one supported at the moment.)
+//if type of repository is not specified, we set it to openidm by default (since it is the only one supported at the moment.)
 	this.repoType = options.repoType || 'openidm';
 	this.baseURL = options.baseURL;
 	this.requestCredentials = options.requestCredentials;
